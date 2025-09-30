@@ -1,14 +1,16 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mcho030.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
-.then(() => console.log('MongoDB connected'))
+  .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
 const userSchema = new mongoose.Schema({

@@ -50,8 +50,9 @@ const Events = () => {
 
   return (
     <>
-      <div>
-        <h1>Events</h1>
+      <div className='flex justify-center items-center'>
+        <h1 className='text-4xl bold italic justify-center text-center'
+        >Events</h1>
         <form onSubmit={handleSubmit}>
           <label htmlFor="Title">Title</label>
           <input

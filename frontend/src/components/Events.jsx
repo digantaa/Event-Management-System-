@@ -58,32 +58,32 @@ const Events = () => {
         <form
         className='flex flex-col items-center gap-4 border border-gray-300 shadow-lg rounded-3xl p-12 w-full max-w-md bg-white'
         onSubmit={handleSubmit}>
-          <label htmlFor="Title">Title</label>
           <input
+            className='border-2 border-gray-300 px-4 py-2 rounded-3xl mt-3 w-full'
             type="text"
             placeholder="Title"
             value={form.title}
             onChange={handleChange}
             required
           />
-          <label htmlFor="date">Date</label>
           <input
+            className='border-2 border-gray-300 px-4 py-2 rounded-3xl mt-3 w-full'
             type="date"
             placeholder="Date"
             value={form.date}
             onChange={handleChange}
             required
           />
-          <label htmlFor="Location">Location</label>
           <input
+            className='border-2 border-gray-300 px-4 py-2 rounded-3xl mt-3 w-full'
             type="text"
             placeholder="Location"
             value={form.location}
             onChange={handleChange}
             required
           />
-          <label htmlFor="status">Status</label>
           <input
+            className='border-2 border-gray-300 px-4 py-2 rounded-3xl mt-3 w-full'
             type="text"
             placeholder="Status"
             value={form.status}

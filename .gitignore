@@ -10,3 +10,4 @@ node_modules/
 # Optional: build/dist folders
 dist/
 build/
+dummy.jsx

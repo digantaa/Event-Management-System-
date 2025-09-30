@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
     const {
@@ -66,6 +66,7 @@ function Login() {
                         >
                             Login
                         </button>
+                        <Link to='/'>or Register</Link>
                     </form>
                 </div>
             </section>

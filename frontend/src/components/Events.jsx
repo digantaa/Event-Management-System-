@@ -50,10 +50,14 @@ const Events = () => {
 
   return (
     <>
-      <div className='flex justify-center items-center'>
-        <h1 className='text-4xl bold italic justify-center text-center'
+      <div className='register min-h-screen flex flex-col justify-center items-center bg-gray-50'>
+        <h1 className='font-mono text-4xl text-center mb-8'
         >Events</h1>
-        <form onSubmit={handleSubmit}>
+        <div className="flex items-center justify-center w-full">
+
+        <form
+        className='flex flex-col items-center gap-4 border border-gray-300 shadow-lg rounded-3xl p-12 w-full max-w-md bg-white'
+        onSubmit={handleSubmit}>
           <label htmlFor="Title">Title</label>
           <input
             type="text"
@@ -88,6 +92,7 @@ const Events = () => {
           />
           <button type="submit">Add event</button>
         </form>
+        </div>
       </div>
       <div>
         <h2>Event List</h2>

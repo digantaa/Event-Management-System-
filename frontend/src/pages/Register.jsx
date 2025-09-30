@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Register = () => {
   const navigation = useNavigate();
@@ -63,6 +63,7 @@ const Register = () => {
           className=' font-mono text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br 
           focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-3 text-center mt-4 mb-0'
           type="submit">Register</button>
+        <Link to='/login'>or log in</Link>
         </form>
         </div>
       </section>

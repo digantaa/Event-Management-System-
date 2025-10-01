@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Calendar, MapPin, Clock } from 'lucide-react';
 
 const EventList = ({ events = [] }) => {
@@ -140,16 +141,8 @@ const EventList = ({ events = [] }) => {
 
 // Demo usage with sample events
 const EventManagementDemo = () => {
-  const sampleEvents = [
-    { id: 1, date: '2025-10-15T10:00:00', location: 'Convention Center, New York', status: 'Upcoming' },
-    { id: 2, date: '2025-09-30T14:30:00', location: 'Tech Hub, San Francisco', status: 'Ongoing' },
-    { id: 3, date: '2025-09-20T09:00:00', location: 'Grand Hall, Chicago', status: 'Completed' },
-    { id: 4, date: '2025-11-05T16:00:00', location: 'Stadium Arena, Los Angeles', status: 'Upcoming' },
-    { id: 5, date: '2025-08-15T11:00:00', location: 'Community Center, Austin', status: 'Cancelled' },
-    { id: 6, date: '2025-11-20T18:00:00', location: 'Music Hall, Nashville', status: 'Postponed' },
-  ];
 
-  return <EventList events={sampleEvents} />;
+ 
 };
 
 export default EventManagementDemo;

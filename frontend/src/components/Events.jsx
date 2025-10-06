@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, MapPin, Clock, Trash2 } from "lucide-react";
+import { Calendar, MapPin, Clock, Trash2, Search } from "lucide-react";
 
 const EventManagement = () => {
   const [events, setEvents] = useState([]);
@@ -10,9 +10,9 @@ const EventManagement = () => {
     location: "",
     status: "",
   });
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  // Fetch events
   useEffect(() => {
     fetch("http://localhost:5000/events")
       .then((res) => res.json())
@@ -20,12 +20,10 @@ const EventManagement = () => {
       .catch((err) => console.error("Error loading events:", err));
   }, []);
 
-  // Handle input
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Add event
   const handleSubmit = (e) => {
     e.preventDefault();
     fetch("http://localhost:5000/events", {
@@ -41,7 +39,6 @@ const EventManagement = () => {
       .catch((err) => console.error("Error adding event:", err));
   };
 
-  // Delete event with confirmation
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
@@ -61,7 +58,9 @@ const EventManagement = () => {
   };
 
   const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
+    switch (
+      status.trim().toLowerCase() 
+    ) {
       case "upcoming":
         return "bg-gradient-to-r from-blue-500 to-blue-600 text-white";
       case "ongoing":
@@ -92,91 +91,105 @@ const EventManagement = () => {
     };
   };
 
+  const filteredEvents = events.filter((e) =>
+    e.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8 flex justify-between items-end">
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              Event Management
-            </h1>
-            <p className="text-gray-600">
-              Manage and track all your events in one place
-            </p>
-          </div>
-          <div className="bg-white px-6 py-3 rounded-xl shadow-md border border-gray-100">
-            <span className="text-sm text-gray-500">Total Events</span>
-            <p className="text-2xl font-bold text-gray-800">{events.length}</p>
-          </div>
+        <div className="mb-8 flex flex-col items-center text-center">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            Event Management
+          </h1>
+          <p className="text-gray-600">
+            Manage and track all your events in one place
+          </p>
         </div>
 
-        {/* Form */}
-        <form
-          className="flex flex-col gap-4 border border-gray-300 shadow-lg rounded-2xl p-6 mb-8 bg-white max-w-lg"
-          onSubmit={handleSubmit}
-        >
-          <input
-            className="border-2 border-gray-300 px-4 py-2 rounded-xl"
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={form.title}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="border-2 border-gray-300 px-4 py-2 rounded-xl"
-            type="datetime-local"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="border-2 border-gray-300 px-4 py-2 rounded-xl"
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={form.location}
-            onChange={handleChange}
-            required
-          />
-          <select
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            required
-            className="border-2 border-gray-300 px-4 py-2 rounded-xl"
+        {/* Form + Search */}
+        <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-10">
+          {/* Form */}
+          <form
+            className="flex flex-col gap-4 border border-gray-300 shadow-lg rounded-2xl p-6 bg-white max-w-lg w-full"
+            onSubmit={handleSubmit}
           >
-            <option value="">Select Status</option>
-            <option value="Upcoming">Upcoming</option>
-            <option value="Ongoing">Ongoing</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Postponed">Postponed</option>
-          </select>
+            <input
+              className="border-2 border-gray-300 px-4 py-2 rounded-xl"
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={form.title}
+              onChange={handleChange}
+              required
+            />
+            <input
+              className="border-2 border-gray-300 px-4 py-2 rounded-xl"
+              type="datetime-local"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              required
+            />
+            <input
+              className="border-2 border-gray-300 px-4 py-2 rounded-xl"
+              type="text"
+              name="location"
+              placeholder="Location"
+              value={form.location}
+              onChange={handleChange}
+              required
+            />
+            <select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              required
+              className="border-2 border-gray-300 px-4 py-2 rounded-xl"
+            >
+              <option value="">Select Status</option>
+              <option value="Upcoming">Upcoming</option>
+              <option value="Ongoing">Ongoing</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Postponed">Postponed</option>
+            </select>
 
-          <button
-            className="font-mono text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br 
-            focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg text-sm px-5 py-3 text-center"
-            type="submit"
-          >
-            Add Event
-          </button>
-        </form>
+            <button
+              className="font-mono text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br 
+              focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg text-sm px-5 py-3 text-center"
+              type="submit"
+            >
+              Add Event
+            </button>
+          </form>
+
+         
+          </div>
+           {/* Search Box */}
+          <div className="flex items-center bg-white border border-gray-300 rounded-2xl shadow-md px-4 py-2 mb-3 w-full max-w-sm justify-center">
+            <Search className="text-gray-500 w-5 h-5 mr-2" />
+            <input
+              type="text"
+              placeholder="Search events..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full outline-none text-gray-700"
+            />
+        </div>
 
         {/* Event List */}
-        {events.length === 0 ? (
+        {filteredEvents.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-xl p-16 text-center border border-gray-100">
             <div className="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center">
               <Calendar className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-2xl font-semibold text-gray-800 mb-2">
-              No Events Yet
+              No Events Found
             </h3>
             <p className="text-gray-500 text-lg">
-              Create your first event to get started!
+              Try searching or create a new event!
             </p>
           </div>
         ) : (
@@ -206,11 +219,11 @@ const EventManagement = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {events.map((event, index) => {
+                  {filteredEvents.map((event, index) => {
                     const { date, time } = formatDate(event.date);
                     return (
                       <tr
-                        key={event.id || index}
+                        key={event._id}
                         className="hover:bg-blue-50 transition-all duration-200"
                       >
                         <td className="px-6 py-5">{index + 1}</td>
@@ -268,7 +281,7 @@ const EventManagement = () => {
         )}
 
         {/* Logout */}
-        <div className="mt-6">
+        <div className="mt-6 flex justify-center">
           <button
             className="font-mono text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br 
               focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg text-sm px-5 py-3 text-center"

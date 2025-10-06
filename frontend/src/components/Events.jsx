@@ -42,18 +42,18 @@ const EventManagement = () => {
   };
 
   // Delete event with confirmation
-  const handleDelete = (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
-    if (!confirmDelete) return;
-
-    fetch(`http://localhost:5000/events/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      try {
+        const res = await fetch(`http://localhost:5000/events/${id}`, {
+          method: "DELETE",
+        });
         if (!res.ok) throw new Error("Failed to delete");
-        setEvents(events.filter((event) => event.id !== id));
-      })
-      .catch((err) => console.error("Error deleting event:", err));
+        setEvents(events.filter((event) => event._id !== id));
+      } catch (err) {
+        console.error("Error deleting event:", err);
+      }
+    }
   };
 
   const handleLogout = () => {
@@ -185,26 +185,45 @@ const EventManagement = () => {
               <table className="min-w-full">
                 <thead>
                   <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">S.No</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Title</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Date & Time</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Location</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider text-center">Action</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                      S.No
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                      Title
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                      Date & Time
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                      Location
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider text-center">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {events.map((event, index) => {
                     const { date, time } = formatDate(event.date);
                     return (
-                      <tr key={event.id || index} className="hover:bg-blue-50 transition-all duration-200">
+                      <tr
+                        key={event.id || index}
+                        className="hover:bg-blue-50 transition-all duration-200"
+                      >
                         <td className="px-6 py-5">{index + 1}</td>
-                        <td className="px-6 py-5 font-semibold text-gray-900">{event.title}</td>
+                        <td className="px-6 py-5 font-semibold text-gray-900">
+                          {event.title}
+                        </td>
                         <td className="px-6 py-5">
                           <div className="flex items-center space-x-3">
                             <Calendar className="w-5 h-5 text-blue-600" />
                             <div>
-                              <div className="text-sm font-semibold text-gray-900">{date}</div>
+                              <div className="text-sm font-semibold text-gray-900">
+                                {date}
+                              </div>
                               <div className="flex items-center text-xs text-gray-500 mt-1">
                                 <Clock className="w-3 h-3 mr-1" />
                                 {time}
@@ -215,7 +234,9 @@ const EventManagement = () => {
                         <td className="px-6 py-5">
                           <div className="flex items-center space-x-3">
                             <MapPin className="w-5 h-5 text-green-600" />
-                            <div className="text-sm font-medium text-gray-900">{event.location}</div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {event.location}
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
@@ -230,7 +251,7 @@ const EventManagement = () => {
                         </td>
                         <td className="px-6 py-5 text-center">
                           <button
-                            onClick={() => handleDelete(event.id)}
+                            onClick={() => handleDelete(event._id)}
                             className="text-red-500 hover:text-red-700 transition"
                             title="Delete Event"
                           >

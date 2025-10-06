@@ -85,7 +85,7 @@ app.patch('/events/:id', async (req, res) => {
 });
 
 // DELETE event by ID
-app.delete("/api/events/:id", async (req, res) => {
+app.delete("/events/:id", async (req, res) => {
   try {
     await Event.findByIdAndDelete(req.params.id);
     res.json({ message: "Event deleted successfully" });
@@ -93,7 +93,6 @@ app.delete("/api/events/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to delete event" });
   }
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

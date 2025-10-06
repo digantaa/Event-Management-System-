@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, MapPin, Clock } from "lucide-react";
+import { Calendar, MapPin, Clock, Trash2 } from "lucide-react";
 
 const EventManagement = () => {
   const [events, setEvents] = useState([]);
@@ -12,7 +12,7 @@ const EventManagement = () => {
   });
   const navigate = useNavigate();
 
-  // Fetch events from backend
+  // Fetch events
   useEffect(() => {
     fetch("http://localhost:5000/events")
       .then((res) => res.json())
@@ -20,15 +20,14 @@ const EventManagement = () => {
       .catch((err) => console.error("Error loading events:", err));
   }, []);
 
-  // Handle form input
+  // Handle input
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Add new event
+  // Add event
   const handleSubmit = (e) => {
     e.preventDefault();
-
     fetch("http://localhost:5000/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -42,15 +41,29 @@ const EventManagement = () => {
       .catch((err) => console.error("Error adding event:", err));
   };
 
+  // Delete event with confirmation
+  const handleDelete = (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+    if (!confirmDelete) return;
+
+    fetch(`http://localhost:5000/events/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to delete");
+        setEvents(events.filter((event) => event.id !== id));
+      })
+      .catch((err) => console.error("Error deleting event:", err));
+  };
+
   const handleLogout = () => {
     navigate("/login");
   };
 
-  // Helpers
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "upcoming":
-        return "bg-gradient-to-r from-gray-500 to-gray-600 text-white";
+        return "bg-gradient-to-r from-blue-500 to-blue-600 text-white";
       case "ongoing":
         return "bg-gradient-to-r from-green-500 to-green-600 text-white";
       case "completed":
@@ -98,7 +111,7 @@ const EventManagement = () => {
           </div>
         </div>
 
-        {/* Event Form */}
+        {/* Form */}
         <form
           className="flex flex-col gap-4 border border-gray-300 shadow-lg rounded-2xl p-6 mb-8 bg-white max-w-lg"
           onSubmit={handleSubmit}
@@ -137,11 +150,11 @@ const EventManagement = () => {
             className="border-2 border-gray-300 px-4 py-2 rounded-xl"
           >
             <option value="">Select Status</option>
-            <option value="Completed">Upcomming</option>
-            <option value="Pending">Ongoing</option>
-            <option value="Incomplete">Completed</option>
-            <option value="Incomplete">Cancelled</option>
-            <option value="Incomplete">Postponed</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Postponed">Postponed</option>
           </select>
 
           <button
@@ -172,42 +185,26 @@ const EventManagement = () => {
               <table className="min-w-full">
                 <thead>
                   <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      S.No
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Title
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Date & Time
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Location
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
-                      Status
-                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">S.No</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Title</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Date & Time</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Location</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {events.map((event, index) => {
                     const { date, time } = formatDate(event.date);
                     return (
-                      <tr
-                        key={event.id || index}
-                        className="hover:bg-blue-50 transition-all duration-200 group"
-                      >
+                      <tr key={event.id || index} className="hover:bg-blue-50 transition-all duration-200">
                         <td className="px-6 py-5">{index + 1}</td>
-                        <td className="px-6 py-5 font-semibold text-gray-900">
-                          {event.title}
-                        </td>
+                        <td className="px-6 py-5 font-semibold text-gray-900">{event.title}</td>
                         <td className="px-6 py-5">
                           <div className="flex items-center space-x-3">
                             <Calendar className="w-5 h-5 text-blue-600" />
                             <div>
-                              <div className="text-sm font-semibold text-gray-900">
-                                {date}
-                              </div>
+                              <div className="text-sm font-semibold text-gray-900">{date}</div>
                               <div className="flex items-center text-xs text-gray-500 mt-1">
                                 <Clock className="w-3 h-3 mr-1" />
                                 {time}
@@ -218,9 +215,7 @@ const EventManagement = () => {
                         <td className="px-6 py-5">
                           <div className="flex items-center space-x-3">
                             <MapPin className="w-5 h-5 text-green-600" />
-                            <div className="text-sm font-medium text-gray-900">
-                              {event.location}
-                            </div>
+                            <div className="text-sm font-medium text-gray-900">{event.location}</div>
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
@@ -233,6 +228,15 @@ const EventManagement = () => {
                             {event.status}
                           </span>
                         </td>
+                        <td className="px-6 py-5 text-center">
+                          <button
+                            onClick={() => handleDelete(event.id)}
+                            className="text-red-500 hover:text-red-700 transition"
+                            title="Delete Event"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </td>
                       </tr>
                     );
                   })}
@@ -242,11 +246,11 @@ const EventManagement = () => {
           </div>
         )}
 
-        {/* Logout button */}
+        {/* Logout */}
         <div className="mt-6">
           <button
             className="font-mono text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br 
-              focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg text-sm px-5 py-3 text-center j flex"
+              focus:ring-4 focus:outline-none focus:ring-purple-300 rounded-lg text-sm px-5 py-3 text-center"
             onClick={handleLogout}
           >
             Logout

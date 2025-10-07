@@ -66,7 +66,7 @@ function Login() {
                         >
                             Login
                         </button>
-                        <Link to='/'>or Register</Link>
+                        <Link to='/register'>or Register</Link>
                     </form>
                 </div>
             </section>

@@ -16,7 +16,7 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cl
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
-  password: Number
+  password: String
 });
 const User = mongoose.model('User', userSchema);
 
@@ -45,17 +45,21 @@ app.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email, password });
     if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-    res.json({ message: 'Login successful', user });
+    
+    // Generate a simple token (in production, use JWT)
+    const token = `token_${user._id}_${Date.now()}`;
+    
+    res.json({ 
+      message: 'Login successful', 
+      user: { id: user._id, name: user.name, email: user.email },
+      token: token
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
 
-app.get('/login', async(req, res) =>{
-  const { email, password } = req.body;
-  res.json({email, password});
-})
 
 
 app.get('/events', async (req, res) => {

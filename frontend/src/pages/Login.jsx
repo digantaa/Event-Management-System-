@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from './../context/AuthContext';
 
 function Login() {
     const {
@@ -11,26 +12,17 @@ function Login() {
 
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState("");
+    const {login} = useContext(AuthContext);
 
     const onSubmit = async (data) => {
-        setLoginError("");
-        try {
-            const response = await fetch("http://localhost:5000/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: data.email, password: data.password }),
-            });
-
-            if (response.ok) {
-                navigate("/events");
-            } else {
-                const errorData = await response.json();
-                setLoginError(errorData.message || "Email or Password is not matching with our record");
-            }
-        } catch (error) {
-            setLoginError("Network error. Please try again.");
-        }
-    };
+    setLoginError("");
+    try {
+        await login(data.email, data.password); 
+        navigate("/events");
+    } catch (error) {
+        setLoginError(error.message || "Email or Password is not matching with our record");
+    }
+};
 
     return (
         <>

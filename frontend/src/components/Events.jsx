@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Calendar, MapPin, Clock, Trash2, Search } from "lucide-react";
+import { AuthContext } from "../context/AuthContext";
 
 const EventManagement = () => {
   const [events, setEvents] = useState([]);
@@ -12,6 +13,7 @@ const EventManagement = () => {
   });
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
 
   useEffect(() => {
     fetch("http://localhost:5000/events")
@@ -54,6 +56,7 @@ const EventManagement = () => {
   };
 
   const handleLogout = () => {
+    logout();
     navigate("/login");
   };
 

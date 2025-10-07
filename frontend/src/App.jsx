@@ -32,6 +32,10 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="*"
+        element={<Navigate to={token ? "/events" : "/login"} replace />}
+      />
     </Routes>
   );
 }

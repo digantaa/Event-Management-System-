@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors(
-  origin: "https://event-management-frontend-xlhq.onrender.com";
+  origin: "https://event-management-frontend-xlhq.onrender.com"
 ));
 app.use(express.json());
 

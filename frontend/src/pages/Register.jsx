@@ -8,21 +8,24 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
- const handleSubmit = async (event) => {
-    event.preventDefault();
-    const response = await fetch('http://localhost:5000/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    });
-    if (response.ok) {
-      console.log('User registered successfully');
-      navigation('/login');
-    } else {
-      const errorData = await response.json();
-      alert(errorData.message || 'Registration failed');
-    }
-  };
+const API_URL = import.meta.env.VITE_API_URL;
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  const response = await fetch(`${API_URL}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password }),
+  });
+  if (response.ok) {
+    console.log('User registered successfully');
+    navigation('/login');
+  } else {
+    const errorData = await response.json();
+    alert(errorData.message || 'Registration failed');
+  }
+};
+
 
   return (
     <>

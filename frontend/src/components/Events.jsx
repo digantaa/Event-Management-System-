@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Calendar, MapPin, Clock, Trash2, Search } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const EventManagement = () => {
   const [events, setEvents] = useState([]);
   const [form, setForm] = useState({
@@ -16,7 +18,7 @@ const EventManagement = () => {
   const { logout } = useContext(AuthContext);
 
   useEffect(() => {
-    fetch("http://localhost:5000/events")
+    fetch(`${API_URL}/events`)
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .catch((err) => console.error("Error loading events:", err));
@@ -28,7 +30,7 @@ const EventManagement = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/events", {
+    fetch(`${API_URL}/events`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
@@ -44,7 +46,7 @@ const EventManagement = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
-        const res = await fetch(`http://localhost:5000/events/${id}`, {
+        const res = await fetch(`${API_URL}/events/${id}`, {
           method: "DELETE",
         });
         if (!res.ok) throw new Error("Failed to delete");
@@ -61,9 +63,7 @@ const EventManagement = () => {
   };
 
   const getStatusColor = (status) => {
-    switch (
-      status.trim().toLowerCase() 
-    ) {
+    switch (status.trim().toLowerCase()) {
       case "upcoming":
         return "bg-gradient-to-r from-blue-500 to-blue-600 text-white";
       case "ongoing":

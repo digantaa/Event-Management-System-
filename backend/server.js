@@ -6,7 +6,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors(
+  origin: "https://event-management-frontend-xlhq.onrender.com";
+));
 app.use(express.json());
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mcho030.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)

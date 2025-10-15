@@ -29,7 +29,7 @@ const handleSubmit = async (event) => {
 
   return (
     <>
-      <section style={{backgroundColor:'#F08080'}} className=" register min-h-screen flex flex-col justify-center items-center bg-gray-50">
+      <section  className=" register min-h-screen flex flex-col justify-center items-center bg-gray-50">
         <h1 className='text-white font-semibold font-mono text-4xl text-center mb-8'>Registration</h1>
         <div className='flex items-center justify-center w-full '>
         <form

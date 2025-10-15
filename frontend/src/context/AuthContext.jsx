@@ -1,6 +1,7 @@
 import React, { createContext, useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL;
+// Normalize API base URL and provide a sensible default for local dev
+const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/+$/, "");
 
 export const AuthContext = createContext();
 
@@ -18,6 +19,12 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
+      const contentType = res.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        const text = await res.text();
+        throw new Error(text || "Unexpected non-JSON response from server");
+      }
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Login failed");

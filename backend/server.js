@@ -7,7 +7,8 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: "https://event-management-frontend-xlhq.onrender.com"
+  origin: 'http://localhost:5173',
+  credentials: true
 }));
 
 app.use(express.json());

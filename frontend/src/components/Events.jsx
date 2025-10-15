@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Calendar, MapPin, Clock, Trash2, Search } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/+$/, "");
 
 const EventManagement = () => {
   const [events, setEvents] = useState([]);
@@ -19,7 +19,18 @@ const EventManagement = () => {
 
   useEffect(() => {
     fetch(`${API_URL}/events`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const contentType = res.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          const text = await res.text();
+          throw new Error(text || "Unexpected non-JSON response from server");
+        }
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data?.message || "Failed to load events");
+        }
+        return res.json();
+      })
       .then((data) => setEvents(data))
       .catch((err) => console.error("Error loading events:", err));
   }, []);
@@ -35,7 +46,18 @@ const EventManagement = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        const contentType = res.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          const text = await res.text();
+          throw new Error(text || "Unexpected non-JSON response from server");
+        }
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data?.message || "Failed to add event");
+        }
+        return data;
+      })
       .then((newEvent) => {
         setEvents([...events, newEvent]);
         setForm({ title: "", date: "", location: "", status: "" });

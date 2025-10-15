@@ -38,10 +38,17 @@ export const AuthProvider = ({ children }) => {
       console.error(err.message);
       throw err;
     }
+    
   };
+  const logout = () =>{
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
 
   return (
-    <AuthContext.Provider value={{ user, token, login }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,4 @@
-Event Management System
+                                                          Event Management System
 
 
 
@@ -77,7 +77,7 @@ http://localhost:3000
 
 Usage
 
-Login with your credentials.
+Log in with your credentials.
 
 After logging in, navigate to the Dashboard.
 
@@ -87,19 +87,4 @@ Delete an Event: Click the delete button next to any event.
 
 Monitor Status: Events are color-coded for easy tracking.
 
-Folder Structure
-event-management-system/
-│
-├─ backend/             # Express backend
-│  ├─ routes/           # API routes
-│  ├─ controllers/      # Route controllers
-│  ├─ models/           # Database models
-│  └─ server.js         # Entry point
-│
-├─ frontend/            # React frontend
-│  ├─ src/
-│  │  ├─ components/   # Reusable components
-│  │  ├─ pages/        # Login, Dashboard, etc.
-│  │  ├─ utils/        # Axios instances, helpers
-│  │  └─ App.jsx       # Main app
-│  └─ tailw
+
